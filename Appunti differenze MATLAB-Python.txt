@@ -1,0 +1,2 @@
+-Se su MATLAB una funzione restituisce 2 variabile e si assegna l'output a una variabile,
+allora solo il primo valore in output viene assegnato, in Python entrambi i valori vengono assegnati alla variabile

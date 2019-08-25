@@ -4,6 +4,8 @@ import numpy as np
 import numpy.matlib
 import resampy
 
+from audio_to_spectrogram_via_STFT import audio_to_spectrogram_via_STFT
+
 def SetMaxIn2DArray(arr, thresh):
     for (i,j), val in np.ndenumerate(arr):
         arr[i][j] = max(val, thresh)
@@ -45,6 +47,7 @@ def novelty_smoothedSubtraction(noveltyCurve, parameter):
     
     noveltySub = noveltyCurve - local_average
     noveltySub[noveltySub < 0] = 0
+    return noveltySub, local_average
 
 
 def audio_to_noveltyCurve(f_audio, fs, parameter=lambda:0):
@@ -95,17 +98,15 @@ def audio_to_noveltyCurve(f_audio, fs, parameter=lambda:0):
         diff_len = 0.3 #sec
         diff_len = max(np.ceil(diff_len*parameter.fs/parameter.stepsize),5)
         diff_len = 2*np.vectorize(MyRound)(np.divide(diff_len,2))+1
-        #E il caso di usare variabili ausiliarie su python?
         aux_arr = np.array(-1*np.ones((int(np.floor(diff_len/2)),1)))
         aux_arr = np.append(aux_arr, 0)
         aux_arr = np.append(aux_arr, np.ones((int(np.floor(diff_len/2)),1)))
         diff_filter = np.multiply(handle(diff_len), aux_arr)
-        #diff_filter = np.transpose(diff_filter) #Inutile su array 1D
-        aux_arr = np.transpose(np.matlib.repmat(bandData[:,0],int(np.floor(diff_len/2)),1))
-        aux_arr = np.concatenate((aux_arr, bandData), axis = 1)
-        aux_arr = np.concatenate((aux_arr, np.transpose(np.matlib.repmat(bandData[:,-1],int(np.floor(diff_len/2)),1))), axis = 1)
+        aux_arr2 = np.transpose(np.matlib.repmat(bandData[:,0],int(np.floor(diff_len/2)),1))
+        aux_arr2 = np.concatenate((aux_arr2, bandData), axis = 1)
+        aux_arr2 = np.concatenate((aux_arr2, np.transpose(np.matlib.repmat(bandData[:,-1],int(np.floor(diff_len/2)),1))), axis = 1)
         diff_filter = diff_filter.reshape((diff_filter.shape[0],1))
-        bandDiff = -1*conv2(aux_arr, np.rot90(diff_filter,1), mode = 'same')
+        bandDiff = -1*conv2(aux_arr2, np.rot90(diff_filter,1), mode = 'same')
         bandDiff[bandDiff < 0] = 0
         bandDiff = bandDiff[:,int(np.floor(diff_len/2)-1):-int(np.floor(diff_len/2)+1)]
         
@@ -113,9 +114,9 @@ def audio_to_noveltyCurve(f_audio, fs, parameter=lambda:0):
         norm_len = 5
         norm_len = max(np.ceil(norm_len*parameter.fs/parameter.stepsize),3)
         norm_filter = handle(norm_len)
-        aux_arr = (norm_filter/np.sum(norm_filter))
-        aux_arr = aux_arr.reshape((1,aux_arr.shape[0]))
-        norm_curve = conv2(np.sum(bandData, axis = 0).reshape((bandData.shape[1],1)), np.rot90(aux_arr, 1), mode = 'same')
+        aux_arr3 = (norm_filter/np.sum(norm_filter))
+        aux_arr3 = aux_arr3.reshape((1,aux_arr3.shape[0]))
+        norm_curve = conv2(np.sum(bandData, axis = 0).reshape((bandData.shape[1],1)), np.rot90(aux_arr3, 1), mode = 'same')
         #boundary correction
         norm_filter_sum = np.divide((np.sum(norm_filter)-np.cumsum(norm_filter)),np.sum(norm_filter))
         norm_filter_sum = norm_filter_sum.reshape((norm_filter_sum.shape[0], 1))
@@ -135,4 +136,6 @@ def audio_to_noveltyCurve(f_audio, fs, parameter=lambda:0):
         noveltyCurve, featureRate = resample_noveltyCurve(noveltyCurve, parameter)
         parameter.featureRate = featureRate
     
-    noveltyCurve = novelty_smoothedSubtraction(noveltyCurve, parameter)
+    noveltyCurve, local_average = novelty_smoothedSubtraction(noveltyCurve, parameter)
+    
+    return noveltyCurve, featureRate

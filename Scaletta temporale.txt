@@ -1,0 +1,37 @@
+28/08/2019
+compute_fourierCoefficients
+noveltyCurve_to_tempogram_via_DFT
+
+4/09/2019
+rescaleTempoAxis
+normalizeFeature
+tempogram_to_cyclicTempogram
+noveltyCurve_to_tempogram_via_ACF (Solo se rimane tempo)
+
+11/09/2019
+noveltyCurve_to_tempogram_via_ACF (Eventualmente finire)
+tempogram_to_PLPcurve
+sonify_noveltyCurve (Andare il più avanti possibile)
+
+18/09/2019
+A questo punto la libreria dovrebbe essere conclusa, se non lo è finire quello che rimane
+Decidere col prof se iniziare la stesura della tesi (probabile) o aggiungere funzioni di test e grafici alla libreria
+
+25/09/2019
+Revisione di quanto ho scritto della tesi
+Termine ultimo per la presentazione della domanda di laurea, conto di averla inviata prima
+
+2/10/2019
+Forse ho finito la stesura(?), altrimenti altra revisione
+
+9/10-15/11
+Il grosso del lavoro dovrebbe essere finito, probabilmente si può aggiungere qualche dettaglio al codice
+se sono in regola col lavoro, discutere di cosa fare in questo periodo
+
+15/11/2019
+Inizio preparazione slide
+
+29/11/2019
+Giorno della laurea
+
+

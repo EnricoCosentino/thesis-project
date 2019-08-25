@@ -1,5 +1,9 @@
 import numpy as np
 
+#Makes Python rounding act like MATLAB's
+def MyRound(number):
+        return round(number + 0.0000001)
+
 def audio_to_spectrogram_via_STFT(f_audio, parameter = lambda:0):
 
     #Definire la funzione handle
@@ -10,7 +14,7 @@ def audio_to_spectrogram_via_STFT(f_audio, parameter = lambda:0):
         parameter.StftWindow = handle(4096)
     windowLength = len(parameter.StftWindow)
     if (not hasattr(parameter, 'stepsize')) or parameter.stepsize == 0:
-        parameter.stepsize = round(windowLength/2)
+        parameter.stepsize = MyRound(windowLength/2)
     if (not hasattr(parameter, 'nFFT')) or parameter.nFFT == 0:
         parameter.nFFT = windowLength
     if (not hasattr(parameter, 'returnMagSpec')) or parameter.returnMagSpec == 0:
