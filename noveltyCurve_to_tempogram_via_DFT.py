@@ -1,11 +1,13 @@
 from warnings import warn
+from compute_fourierCoefficients_python import compute_fourierCoefficients_python
 
 import numpy as np
+from scipy import signal
 import math
 
 #Makes Python rounding act like MATLAB's
 def MyRound(number):
-        return round(number + 0.0000001)
+        return round(number + 0.0001)
 
 def noveltyCurve_to_tempogram_via_DFT(novelty, parameter = lambda:0):
     if (not hasattr(parameter, 'featureRate')):
@@ -36,6 +38,17 @@ def noveltyCurve_to_tempogram_via_DFT(novelty, parameter = lambda:0):
 
     if parameter.useImplementation == 1: #C implementation
         warn("C implementation not done yet")
-        return
+        exit(1)
     elif parameter.useImplementation == 2: #Python implementation
         tempogram, BPM, T = compute_fourierCoefficients_python(novelty, windowTempogram, win_len - parameter.stepsize, np.divide(parameter.BPM, 60), parameter.featureRate)
+        tempogram = np.divide(tempogram, np.sqrt(win_len))/ sum(windowTempogram) * win_len
+    elif parameter.useImplementation == 3:
+        warn("This implementation is still being worked on and does not work as intended")
+        BPM, T, tempogram = signal.spectrogram(novelty, parameter.featureRate, windowTempogram, noverlap = win_len - parameter.stepsize, mode = 'complex')
+        tempogram = np.divide(tempogram, np.sqrt(win_len))/ sum(windowTempogram) * win_len
+
+    BPM = np.multiply(BPM, 60)
+    T = T - T[0]
+    
+    return tempogram, T, BPM
+    
