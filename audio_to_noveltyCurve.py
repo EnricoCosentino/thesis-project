@@ -26,7 +26,7 @@ def SetMinIn1DArray(arr, thresh):
 
 #Makes Python rounding act like MATLAB's
 def MyRound(number):
-        return round(number + 0.0000001)
+        return round(number + 0.0001)
 
 #Thanks to user jowlo on StackOverflow
 def conv2(x, y, mode='same'):

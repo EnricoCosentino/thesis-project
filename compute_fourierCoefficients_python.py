@@ -27,5 +27,5 @@ def compute_fourierCoefficients_python(s, win, noverlap, f, fs = 1):
             si = np.sum(np.multiply(sig, sine))
             x[w, f0] = np.complex(co, si)
 
-    x = np.transpose(x)
+    x = x.conj().T
     return x, f, t

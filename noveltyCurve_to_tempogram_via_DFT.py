@@ -1,5 +1,6 @@
 from warnings import warn
 from compute_fourierCoefficients_python import compute_fourierCoefficients_python
+import sys
 
 import numpy as np
 from scipy import signal
@@ -38,7 +39,7 @@ def noveltyCurve_to_tempogram_via_DFT(novelty, parameter = lambda:0):
 
     if parameter.useImplementation == 1: #C implementation
         warn("C implementation not done yet")
-        exit(1)
+        sys.exit(1)
     elif parameter.useImplementation == 2: #Python implementation
         tempogram, BPM, T = compute_fourierCoefficients_python(novelty, windowTempogram, win_len - parameter.stepsize, np.divide(parameter.BPM, 60), parameter.featureRate)
         tempogram = np.divide(tempogram, np.sqrt(win_len))/ sum(windowTempogram) * win_len

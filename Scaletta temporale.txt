@@ -3,14 +3,14 @@ compute_fourierCoefficients
 noveltyCurve_to_tempogram_via_DFT
 
 4/09/2019
-rescaleTempoAxis
-normalizeFeature
-tempogram_to_cyclicTempogram
+rescaleTempoAxis 
+normalizeFeature (fatto)
+tempogram_to_PLPcurve
 noveltyCurve_to_tempogram_via_ACF (Solo se rimane tempo)
 
 11/09/2019
 noveltyCurve_to_tempogram_via_ACF (Eventualmente finire)
-tempogram_to_PLPcurve
+tempogram_to_cyclicTempogram
 sonify_noveltyCurve (Andare il più avanti possibile)
 
 18/09/2019

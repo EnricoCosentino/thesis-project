@@ -2,11 +2,10 @@ import numpy as np
 
 #Makes Python rounding act like MATLAB's
 def MyRound(number):
-        return round(number + 0.0000001)
+        return round(number + 0.0001)
 
 def audio_to_spectrogram_via_STFT(f_audio, parameter = lambda:0):
 
-    #Definire la funzione handle
     handle = lambda n: 0.5-0.5*np.cos(2*np.pi*(np.transpose(np.arange(0, n))/(n-1)))
 
     #Default inizialization of parameter
