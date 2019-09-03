@@ -32,7 +32,7 @@ def tempogram_to_PLPcurve(tempogram, T, BPM, parameter = lambda:0):
     tempogramAbs = np.abs(tempogram)
     rangeAr = np.zeros(2, dtype = 'int')
     rangeAr[0] = np.argmin(np.abs(BPM-parameter.PLPrange[0]))
-    rangeAr[1] = np.argmin(np.abs(BPM-parameter.PLPrange[1]))
+    rangeAr[1] = np.argmin(np.abs(BPM-parameter.PLPrange[1])) + 1
 
     local_max = np.zeros(tempogramAbs.shape[1])
     if (not parameter.useTempocurve):
@@ -85,7 +85,6 @@ def tempogram_to_PLPcurve(tempogram, T, BPM, parameter = lambda:0):
         
         if t1 > PLP.shape[0]:
             cosine = cosine[:-(t1-PLP.shape[0])]
-            aux = t1
             t1 = PLP.shape[0]
             
         PLP[t0-1:t1] = PLP[t0-1:t1] + cosine 

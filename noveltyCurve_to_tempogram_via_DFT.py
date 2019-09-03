@@ -3,8 +3,8 @@ from compute_fourierCoefficients_python import compute_fourierCoefficients_pytho
 import sys
 
 import numpy as np
-from scipy import signal
 import math
+from matplotlib.pyplot import specgram
 
 #Makes Python rounding act like MATLAB's
 def MyRound(number):
@@ -45,7 +45,7 @@ def noveltyCurve_to_tempogram_via_DFT(novelty, parameter = lambda:0):
         tempogram = np.divide(tempogram, np.sqrt(win_len))/ sum(windowTempogram) * win_len
     elif parameter.useImplementation == 3:
         warn("This implementation is still being worked on and does not work as intended")
-        BPM, T, tempogram = signal.spectrogram(novelty, parameter.featureRate, windowTempogram, noverlap = win_len - parameter.stepsize, mode = 'complex')
+        BPM, T, tempogram = specgram(novelty, Fs = parameter.featureRate, window = windowTempogram, noverlap = win_len - parameter.stepsize, mode = 'psd')
         tempogram = np.divide(tempogram, np.sqrt(win_len))/ sum(windowTempogram) * win_len
 
     BPM = np.multiply(BPM, 60)

@@ -6,6 +6,7 @@ from audio_to_noveltyCurve import audio_to_noveltyCurve
 from noveltyCurve_to_tempogram_via_DFT import noveltyCurve_to_tempogram_via_DFT
 from normalizeFeature import normalizeFeature
 from tempogram_to_PLPcurve import tempogram_to_PLPcurve
+from noveltyCurve_to_tempogram_via_ACF import noveltyCurve_to_tempogram_via_ACF
 
 samplerate, data = wavfile.read("02 - Moar Ghosts n' Stuff.wav")
 
@@ -21,7 +22,7 @@ parameter_novCurve = lambda:0
 novCurve, featureRate = audio_to_noveltyCurve(rd, samplerate/2, parameter_novCurve)
 
 #################
-#TEMPOGRAM
+#TEMPOGRAM VIA DFT
 #################
 parameter_tempogram = lambda:0
 parameter_tempogram.featureRate = featureRate
@@ -40,4 +41,17 @@ parameter_PLP.tempoWindow = parameter_tempogram.tempoWindow
 
 #I valori di PLP divergono sempre di piu dalla versione MATLAB man mano che ci
 #si avvicina alla fine dell'array
+#Il motivo sembra essere che la posizione del massimo di alcune colonne del 
+#tempogramma differisce tra le 2 versioni
 PLP, featureRate = tempogram_to_PLPcurve(tempogram, T, BPM, parameter_PLP)
+PLP = PLP[:novCurve.shape[1]]
+
+#################
+#TEMPOGRAM VIA ACF
+#################
+parameter_tempogram = lambda:0
+parameter_tempogram.featureRate = featureRate
+parameter_tempogram.tempoWindow = 8
+parameter_tempogram.maxLag = 2
+parameter_tempogram.minLag = 0.1
+tempogram_autocorrelation_timeLag, T, timeLag = noveltyCurve_to_tempogram_via_ACF(novCurve, parameter_tempogram)
