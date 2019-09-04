@@ -78,7 +78,8 @@ def noveltyCurve_to_tempogram_via_ACF(novelty, parameter = lambda:0):
         noveltyNorm[win] = np.sum(np.power(np.multiply(window,nov),2))
         N[win] = stop-start+1
     
-        tempogram = np.flipud(tempogram[int(minLag)-1:,:])
+    tempogram = np.flipud(tempogram[int(minLag)-1:,:])
         
-        T = np.divide(np.arange(0, num_win), parameter.featureRate/parameter.stepsize)
-        Lag = np.flipud(np.divide(np.arange(minLag, maxLag+1, 1), parameter.featureRate))
+    T = np.divide(np.arange(0, num_win), parameter.featureRate/parameter.stepsize)
+    Lag = np.flipud(np.divide(np.arange(minLag, maxLag+1, 1), parameter.featureRate))
+    return tempogram, T, Lag

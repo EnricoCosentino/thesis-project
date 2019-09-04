@@ -7,6 +7,7 @@ from noveltyCurve_to_tempogram_via_DFT import noveltyCurve_to_tempogram_via_DFT
 from normalizeFeature import normalizeFeature
 from tempogram_to_PLPcurve import tempogram_to_PLPcurve
 from noveltyCurve_to_tempogram_via_ACF import noveltyCurve_to_tempogram_via_ACF
+from rescaleTempoAxis import rescaleTempoAxis
 
 samplerate, data = wavfile.read("02 - Moar Ghosts n' Stuff.wav")
 
@@ -55,3 +56,10 @@ parameter_tempogram.tempoWindow = 8
 parameter_tempogram.maxLag = 2
 parameter_tempogram.minLag = 0.1
 tempogram_autocorrelation_timeLag, T, timeLag = noveltyCurve_to_tempogram_via_ACF(novCurve, parameter_tempogram)
+tempogram_autocorrelation_timeLag = np.real(normalizeFeature(tempogram_autocorrelation_timeLag, 2, 0.0001))
+
+#################
+#RESCALED TEMPOGRAM VIA DFT
+#################
+tempogram_DFT_timelag, timeLag = rescaleTempoAxis(tempogram, np.divide(60, BPM), timeLag)
+tempogram_DFT_timelag = normalizeFeature(tempogram_DFT_timelag, 2, 0.0001)
