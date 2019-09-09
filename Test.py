@@ -8,6 +8,7 @@ from normalizeFeature import normalizeFeature
 from tempogram_to_PLPcurve import tempogram_to_PLPcurve
 from noveltyCurve_to_tempogram_via_ACF import noveltyCurve_to_tempogram_via_ACF
 from rescaleTempoAxis import rescaleTempoAxis
+from tempogram_to_cyclicTempogram import tempogram_to_cyclicTempogram
 
 samplerate, data = wavfile.read("02 - Moar Ghosts n' Stuff.wav")
 
@@ -45,7 +46,7 @@ parameter_PLP.tempoWindow = parameterTempogram.tempoWindow
 #Il motivo sembra essere che la posizione del massimo di alcune colonne del 
 #tempogramma differisce tra le 2 versioni
 PLP, featureRate = tempogram_to_PLPcurve(tempogram, T, BPM, parameter_PLP)
-PLP = PLP[:novCurve.shape[1]]
+PLP = PLP[:novCurve.shape[1]] #removes zero padding
 
 #################
 #TEMPOGRAM VIA ACF
@@ -77,4 +78,4 @@ parameterTempogram.BPM = 30 *  np.power(2, np.arange(0, 4 + 0.0001, 1/octave_div
 parameterCyclic = lambda:0
 parameterCyclic.octave_divider = octave_divider
 tempogram_fourier, T, BPM  = noveltyCurve_to_tempogram_via_DFT(novCurve, parameterTempogram)
-cyclicTempogram_fourier = tempogram_to_cyclicTempogram(tempogram_fourier, BPM, parameterCyclic)
+cyclicTempogram_fourier, cyclicAxis = tempogram_to_cyclicTempogram(tempogram_fourier, BPM, parameterCyclic)
