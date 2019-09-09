@@ -2,3 +2,4 @@
 *.wav
 .spyProject
 __pycache__
+*.csv

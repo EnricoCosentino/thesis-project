@@ -25,12 +25,12 @@ novCurve, featureRate = audio_to_noveltyCurve(rd, samplerate/2, parameter_novCur
 #################
 #TEMPOGRAM VIA DFT
 #################
-parameter_tempogram = lambda:0
-parameter_tempogram.featureRate = featureRate
-parameter_tempogram.tempoWindow = 8 #in sec
-parameter_tempogram.BPM = np.arange(30, 601)
-#parameter_tempogram.useImplementation = 2
-tempogram, T, BPM = noveltyCurve_to_tempogram_via_DFT(novCurve, parameter_tempogram) 
+parameterTempogram = lambda:0
+parameterTempogram.featureRate = featureRate
+parameterTempogram.tempoWindow = 8 #in sec
+parameterTempogram.BPM = np.arange(30, 601)
+#parameterTempogram.useImplementation = 2
+tempogram, T, BPM = noveltyCurve_to_tempogram_via_DFT(novCurve, parameterTempogram) 
 tempogram = normalizeFeature(tempogram, 2, 0.0001)
 
 #################
@@ -38,7 +38,7 @@ tempogram = normalizeFeature(tempogram, 2, 0.0001)
 #################
 parameter_PLP = lambda:0
 parameter_PLP.featureRate = featureRate
-parameter_PLP.tempoWindow = parameter_tempogram.tempoWindow
+parameter_PLP.tempoWindow = parameterTempogram.tempoWindow
 
 #I valori di PLP divergono sempre di piu dalla versione MATLAB man mano che ci
 #si avvicina alla fine dell'array
@@ -50,12 +50,12 @@ PLP = PLP[:novCurve.shape[1]]
 #################
 #TEMPOGRAM VIA ACF
 #################
-parameter_tempogram = lambda:0
-parameter_tempogram.featureRate = featureRate
-parameter_tempogram.tempoWindow = 8
-parameter_tempogram.maxLag = 2
-parameter_tempogram.minLag = 0.1
-tempogram_autocorrelation_timeLag, T, timeLag = noveltyCurve_to_tempogram_via_ACF(novCurve, parameter_tempogram)
+parameterTempogram = lambda:0
+parameterTempogram.featureRate = featureRate
+parameterTempogram.tempoWindow = 8
+parameterTempogram.maxLag = 2
+parameterTempogram.minLag = 0.1
+tempogram_autocorrelation_timeLag, T, timeLag = noveltyCurve_to_tempogram_via_ACF(novCurve, parameterTempogram)
 tempogram_autocorrelation_timeLag = np.real(normalizeFeature(tempogram_autocorrelation_timeLag, 2, 0.0001))
 
 #################
@@ -63,3 +63,18 @@ tempogram_autocorrelation_timeLag = np.real(normalizeFeature(tempogram_autocorre
 #################
 tempogram_DFT_timelag, timeLag = rescaleTempoAxis(tempogram, np.divide(60, BPM), timeLag)
 tempogram_DFT_timelag = normalizeFeature(tempogram_DFT_timelag, 2, 0.0001)
+
+#################
+#CYCLIC TEMPOGRAM FOURIER, 120 DIM
+#################
+octave_divider = 120
+
+parameterTempogram = lambda:0
+parameterTempogram.featureRate = featureRate
+parameterTempogram.tempoWindow = 5
+parameterTempogram.BPM = 30 *  np.power(2, np.arange(0, 4 + 0.0001, 1/octave_divider))
+
+parameterCyclic = lambda:0
+parameterCyclic.octave_divider = octave_divider
+tempogram_fourier, T, BPM  = noveltyCurve_to_tempogram_via_DFT(novCurve, parameterTempogram)
+cyclicTempogram_fourier = tempogram_to_cyclicTempogram(tempogram_fourier, BPM, parameterCyclic)
